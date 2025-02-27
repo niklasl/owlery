@@ -1,0 +1,34 @@
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix : <http://example.org/ns/>
+base <https://example.org/>
+
+##
+# TBox
+
+:GenreForm owl:equivalentClass [ owl:onProperty :selfIsGf ; owl:hasSelf true ] .
+:genreForm owl:propertyChainAxiom (:category :selfIsGf) .
+
+:ContentType owl:equivalentClass [ owl:onProperty :selfIsCt ; owl:hasSelf true ] .
+:contentType owl:propertyChainAxiom (:category :selfIsCt) .
+
+:CarrierType owl:equivalentClass [ owl:onProperty :selfIsCr ; owl:hasSelf true ] .
+:carrierType owl:propertyChainAxiom (:category :selfIsCr) .
+
+:LiteraryGenre rdfs:subClassOf :GenreForm .
+:PhysicalForm rdfs:subClassOf :GenreForm .
+
+##
+# ABox
+
+<novel> a :LiteraryGenre .
+<paperback> a :PhysicalForm .
+<text> a :ContentType .
+<volume> a :CarrierType .
+
+<x> a :Work ;
+  :category <novel>, <text> .
+
+<y> a :Instance ;
+  :instanceOf <x> ;
+  :category <paperback>, <volume> .

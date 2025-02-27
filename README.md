@@ -22,3 +22,9 @@ You need an RDF graph implementation with SPARQL support. Then:
   - If new size of `g` is still `c`:
     - Break loop.
 * Serialize `g` as a regular RDF graph.
+
+## Example
+
+A simple Python version of the above:
+
+    $ python test/owlery.py test/rolification.ttl
