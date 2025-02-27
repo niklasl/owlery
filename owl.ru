@@ -1,5 +1,5 @@
 ##
-# Owlery - An OWL2 Implementation in SPARQL.
+# Owlery - An OWL 2 Implementation in SPARQL.
 # (See <https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules>.)
 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

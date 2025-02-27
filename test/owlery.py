@@ -6,7 +6,7 @@ from pathlib import Path
 
 from rdflib import ConjunctiveGraph
 
-owlery = (Path(__file__).parent.parent / 'owl2.rq').read_text()
+owlery = (Path(__file__).parent.parent / 'owl.ru').read_text()
 
 ds = ConjunctiveGraph()
 
