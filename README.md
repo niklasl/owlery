@@ -11,6 +11,20 @@ Limitations:
 * No negative rules are implemented.
 * Rules involving lists are currently capped at a few (~7) member items.
 
+## Implementation
+
+### OWL 2 Rule Logic
+
+The `owl.ru` update query inserts triples entailed by pattern matching. It implements (most of) the [OWL RL rules](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules), and additionally supports `owl:hasSelf` (for rolification).
+
+### Generalized RDF
+
+An update query, `generalize.ru`, is also defined for "generalizing" RDF. This makes non-serializable entailments possible to work with, such as blank node predicates or literal subjects. It inserts `owl:sameAs` relations, mapping IRIs to blank nodes, and blank nodes to literals. For triple terms, see the following section.
+
+### RDF 1.2 Triple Terms
+
+Another update query, `classicize.ru`, maps triple terms via `rdf:reifies` to blank node `rdf:Statement` "companion tokens".
+
 ## Run
 
 You need an RDF graph implementation with SPARQL support. Then:
@@ -23,7 +37,7 @@ You need an RDF graph implementation with SPARQL support. Then:
     - Break loop.
 * Serialize `g` as a regular RDF graph.
 
-## Example
+## Example Usage
 
 A simple Python version of the above:
 
