@@ -12,7 +12,6 @@ MAX_ITERS = 24
 
 owlery = (REPO_ROOT / 'owl.ru').read_text()
 genery = (REPO_ROOT / 'generalize.ru').read_text()
-clsery = (REPO_ROOT / 'classicize.ru').read_text()
 
 extra_updates = []
 extra_queries = []
@@ -38,7 +37,6 @@ for fpath in sys.argv[1:]:
     prefixes.update(data.prefixes)
 
 store.update(genery)
-store.update(clsery)
 
 for update in extra_updates:
     store.update(update)

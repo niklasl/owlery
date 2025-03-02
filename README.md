@@ -17,19 +17,7 @@ Limitations:
 
 The `owl.ru` update query inserts triples entailed by pattern matching. It implements (most of) the [OWL RL rules](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules), and additionally supports `owl:hasSelf` (for rolification).
 
-### Generalized RDF
-
-An update query, `generalize.ru`, is also defined for "generalizing" RDF. This makes non-serializable entailments possible to work with, such as blank node predicates or literal subjects. It inserts `owl:sameAs` relations, mapping IRIs to blank nodes, and blank nodes to literals. For triple terms, see the following section.
-
-### RDF 1.2 Triple Terms
-
-Another update query, `classicize.ru`, maps triple terms via `rdf:reifies` to blank node `rdf:Statement` "companion tokens".
-
-### Time Value Expansion
-
-The `time.ru` update query (currently) expands `xsd:date`, `xsd:dateTime` and `xsd:dateTimeStamp` literals into (`owl:sameAs`) value nodes with up to seven constituent time properties (`time:year`, `time:month`, `time:day`, `time:hour`, `time:minute`, `time:second`, `time:timeZone`) from the [Time Ontology](https://www.w3.org/TR/owl-time/).
-
-## Run
+### Running
 
 You need an RDF graph implementation with SPARQL support. Then:
 
@@ -40,6 +28,20 @@ You need an RDF graph implementation with SPARQL support. Then:
   - If triple count of `g` is still `c`:
     - Break loop.
 * Serialize `g` as a regular RDF graph.
+
+## Extensions
+
+### Generalized RDF
+
+An update query, `generalize.ru`, is also defined for "generalizing" RDF. This makes non-serializable entailments possible to work with, such as blank node predicates or literal subjects. It inserts `owl:sameAs` relations, mapping IRIs to blank nodes, and blank nodes to literals. For triple terms, see the following section.
+
+### RDF 1.2 Triple Terms
+
+Another update query, `classicize.ru`, maps triple terms via `rdf:reifies` to blank node `rdf:Statement` "companion tokens".
+
+### Time Value Expansion
+
+The additional `time.ru` update query (currently) expands `xsd:date`, `xsd:dateTime` and `xsd:dateTimeStamp` literals into (`owl:sameAs`) value nodes with up to seven constituent time properties (`time:year`, `time:month`, `time:day`, `time:hour`, `time:minute`, `time:second`, `time:timeZone`) from the [Time Ontology](https://www.w3.org/TR/owl-time/).
 
 ## Example Usage
 
@@ -53,23 +55,23 @@ It can optionally apply a query for verifying the results instead:
 
     $ uv run test/run.py test/data/rolification.ttl test/data/verify-rolification.rq
 
-The script also applies the above mentioned generalize and classicize SPARQL update queries; thus working with more complex requirements.
-
-Handling entailed blank properties:
+The script also applies the above mentioned `generalize.ru` update query; thus working with more complex requirements, such as entailed blank properties:
 
     $ uv run test/run.py test/data/metarolification.ttl test/data/verify-rolification.rq
 
+Additionally passed update query files will also be applied.
+
 Handling entailment rules based on triple terms:
 
-    $ uv run test/run.py test/data/purchase.ttl test/data/verify-purchase.rq
+    $ uv run test/run.py classicize.ru test/data/purchase.ttl test/data/verify-purchase.rq
 
-Additional update queries will also be applied. To test the time expansion (see above):
+To test the time expansion (see above):
 
     $ uv run test/run.py time.ru test/data/time.ttl test/data/verify-time.rq
 
 Full test of all examples:
 
-    $ uv run test/run.py time.ru test/data/*.ttl test/data/verify-*.rq
+    $ uv run test/run.py classicize.ru time.ru test/data/*.ttl test/data/verify-*.rq
 
 ## Applying Manually
 
