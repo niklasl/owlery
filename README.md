@@ -25,6 +25,10 @@ An update query, `generalize.ru`, is also defined for "generalizing" RDF. This m
 
 Another update query, `classicize.ru`, maps triple terms via `rdf:reifies` to blank node `rdf:Statement` "companion tokens".
 
+### Time Value Expansion
+
+The `time.ru` update query (currently) expands `xsd:date`, `xsd:dateTime` and `xsd:dateTimeStamp` literals into (`owl:sameAs`) value nodes with up to seven constituent time properties (`time:year`, `time:month`, `time:day`, `time:hour`, `time:minute`, `time:second`, `time:timeZone`) from the [Time Ontology](https://www.w3.org/TR/owl-time/).
+
 ## Run
 
 You need an RDF graph implementation with SPARQL support. Then:
@@ -59,9 +63,13 @@ Handling entailment rules based on triple terms:
 
     $ uv run test/run.py test/data/purchase.ttl test/data/verify-purchase.rq
 
+Additional update queries will also be applied. To test the time expansion (see above):
+
+    $ uv run test/run.py time.ru test/data/time.ttl test/data/verify-time.rq
+
 Full test of all examples:
 
-    $ uv run test/run.py test/data/*.ttl test/data/verify-*.rq
+    $ uv run test/run.py time.ru test/data/*.ttl test/data/verify-*.rq
 
 ## Applying Manually
 

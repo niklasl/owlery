@@ -1,0 +1,21 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix time: <http://www.w3.org/2006/time#>
+prefix dct: <http://purl.org/dc/terms/>
+base <https://example.org/>
+
+ask where {
+  <z>
+    dct:created [ a time:DateTimeDescription ;
+        time:year "2015"^^xsd:gYear ;
+        time:month "--11"^^xsd:gMonth ;
+        time:day "---01"^^xsd:gDay ;
+        time:hour "17"^^xsd:nonNegativeInteger ;
+        time:minute "58"^^xsd:nonNegativeInteger ;
+        time:hour 17 ;
+        time:minute 58 ;
+        time:second 16.102 ;
+        time:timeZone [ rdf:value "Z" ] # <http://dbpedia.org/page/Coordinated_Universal_Time>
+      ] .
+}
