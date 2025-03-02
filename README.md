@@ -31,14 +31,50 @@ You need an RDF graph implementation with SPARQL support. Then:
 
 * Create a *generalized* graph `g` and read RDF data into it.
 * Repeat loop:
-  - Let `c` be size of `g`.
+  - Let `c` be triple count of `g`.
   - Insert generalized triples by applying the `owl.ru` update query to `g`.
-  - If new size of `g` is still `c`:
+  - If triple count of `g` is still `c`:
     - Break loop.
 * Serialize `g` as a regular RDF graph.
 
 ## Example Usage
 
-A simple Python version of the above:
+A simple Python script (using [pyoxigraph](https://pyoxigraph.readthedocs.io/)) following the above steps is provided.
 
-    $ python test/owlery.py test/rolification.ttl
+To see resulting entailments, pass it some RDF data:
+
+    $ uv run test/run.py test/data/rolification.ttl
+
+It can optionally apply a query for verifying the results instead:
+
+    $ uv run test/run.py test/data/rolification.ttl test/data/verify-rolification.rq
+
+The script also applies the above mentioned generalize and classicize SPARQL update queries; thus working with more complex requirements.
+
+Handling entailed blank properties:
+
+    $ uv run test/run.py test/data/metarolification.ttl test/data/verify-rolification.rq
+
+Full test of all examples:
+
+    $ uv run test/run.py test/data/*.ttl test/data/verify-*.rq
+
+## Applying Manually
+
+For testing and introspection, using a plain SPARQL CLI and applying the steps manually is enough.
+
+Using [OxRQ](https://github.com/niklasl/oxrq) (two passes are needed for this particular test):
+
+    $ cat test/data/rolification.ttl |
+      oxrq -f generalize.ru |
+      oxrq -f owl.ru |
+      oxrq -f owl.ru |
+      oxrq -f test/data/verify-rolification.rq
+
+Variant using the [Jena CLI tools](https://jena.apache.org/documentation/tools/index.html):
+
+    $ update --update generalize.ru --data test/data/rolification.ttl --dump > /tmp/jena-scratch-1.ttl
+    $ update --update owl.ru --data /tmp/jena-scratch-1.ttl --dump > /tmp/jena-scratch-2.ttl
+    $ update --update owl.ru --data /tmp/jena-scratch-2.ttl --dump > /tmp/jena-scratch-3.ttl
+    $ arq --file test/data/verify-rolification.rq --data /tmp/jena-scratch-3.ttl
+

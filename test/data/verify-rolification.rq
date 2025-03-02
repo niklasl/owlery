@@ -1,0 +1,15 @@
+prefix : <http://example.org/ns/>
+base <https://example.org/>
+
+ask where {
+  <novel> a :GenreForm .
+  <paperback> a :GenreForm .
+
+  <x> :genreForm <novel> ; :contentType <text> .
+  filter not exists { <x> :genreForm ?gf filter(?gf != <novel>) }
+  filter not exists { <x> :contentType ?co filter(?co != <text>) }
+
+  <y> :genreForm <paperback> ; :carrierType <volume> .
+  filter not exists { <y> :genreForm ?gf filter(?gf != <paperback>) }
+  filter not exists { <y> :carrierType ?cr filter(?cr != <volume>) }
+}
