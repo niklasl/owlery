@@ -1,0 +1,51 @@
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix : <http://example.org/ns/>
+base <https://example.org/>
+
+##
+# MetaBox
+
+:selfOfType rdfs:subPropertyOf [ owl:inverseOf owl:onProperty ] ;
+  rdfs:range [ owl:onProperty owl:hasSelf ; owl:hasValue true ] .
+
+:reifiedBy owl:inverseOf rdf:reifies .
+
+##
+# TBox
+
+:boughtStmt owl:propertyChainAxiom ([ :selfOfType :Purchase ] rdf:reifies :reifiedBy [ :selfOfType :BoughtStmt ]) .
+:BoughtStmt owl:equivalentClass [ owl:onProperty rdf:predicate ; owl:hasValue :bought ] .
+
+:shoppedAtStmt owl:propertyChainAxiom ([ :selfOfType :Purchase ] rdf:reifies :reifiedBy [ :selfOfType :ShoppedAtStmt ]) .
+:ShoppedAtStmt owl:equivalentClass [ owl:onProperty rdf:predicate ; owl:hasValue :shoppedAt ] .
+
+:buyer rdfs:domain :Purchase ;
+  owl:propertyChainAxiom (:boughtStmt rdf:subject) ;
+  owl:propertyChainAxiom (:shoppedAtStmt rdf:subject) .
+
+:item rdfs:domain :Purchase ;
+  owl:propertyChainAxiom (:boughtStmt rdf:object) .
+
+:seller rdfs:domain :Purchase ;
+  owl:propertyChainAxiom (:shoppedAtStmt rdf:object) .
+
+:bought owl:propertyChainAxiom ( [ owl:inverseOf :buyer ] :item ) .
+
+:shoppedAt owl:propertyChainAxiom ( [ owl:inverseOf :buyer ] :seller ) .
+
+##
+# ABox
+
+<Alice> :bought <SomeComputer> . # TODO: ~ <purchase1> .
+<Alice> :shoppedAt <ComputerStore> . # TODO: ~ <purchase1> .
+<purchase1> a :Purchase ;
+  :date "2014-12-15"^^xsd:date ;
+  :cost 2500 ;
+  :currency :USD ;
+  # FIXME: This is the *old* RDF-star form. In RDF 1.2, these are <<( ... )>>
+  # (and here preferably expressed via annotation per above).
+  rdf:reifies << <Alice> :bought <SomeComputer> >> ;
+  rdf:reifies << <Alice> :shoppedAt <ComputerStore> >> .

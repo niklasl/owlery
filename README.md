@@ -55,6 +55,10 @@ Handling entailed blank properties:
 
     $ uv run test/run.py test/data/metarolification.ttl test/data/verify-rolification.rq
 
+Handling entailment rules based on triple terms:
+
+    $ uv run test/run.py test/data/purchase.ttl test/data/verify-purchase.rq
+
 Full test of all examples:
 
     $ uv run test/run.py test/data/*.ttl test/data/verify-*.rq
