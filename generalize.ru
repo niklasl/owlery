@@ -45,5 +45,6 @@ insert {
   ?s ?p ?o .
   filter(isLiteral(?o))
   bind(datatype(?o) as ?dt)
-  bind(IRI(concat('urn:sha:', SHA256(concat(str(?o), '^^', str(?dt))))) as ?shaurn)
+  bind(concat(str(?o), '^^', str(?dt), '@', lang(?o)) as ?ltrepr)  # TODO: , '--', langdir(?o)
+  bind(IRI(concat('urn:sha:', SHA256(?ltrepr))) as ?shaurn)
 }
