@@ -16,11 +16,17 @@ base <https://example.org/>
 ##
 # TBox
 
-:boughtStmt owl:propertyChainAxiom ([ :selfOfType :Purchase ] rdf:reifies :reifiedBy [ :selfOfType :BoughtStmt ]) .
-:BoughtStmt owl:equivalentClass [ owl:onProperty rdf:predicate ; owl:hasValue :bought ] .
+:boughtStmt owl:propertyChainAxiom (
+      [ :selfOfType :Purchase ]
+      rdf:reifies :reifiedBy
+      [ :selfOfType [ owl:onProperty rdf:predicate ; owl:hasValue :bought ] ]
+    ) .
 
-:shoppedAtStmt owl:propertyChainAxiom ([ :selfOfType :Purchase ] rdf:reifies :reifiedBy [ :selfOfType :ShoppedAtStmt ]) .
-:ShoppedAtStmt owl:equivalentClass [ owl:onProperty rdf:predicate ; owl:hasValue :shoppedAt ] .
+:shoppedAtStmt owl:propertyChainAxiom (
+      [ :selfOfType :Purchase ]
+      rdf:reifies :reifiedBy
+      [ :selfOfType [ owl:onProperty rdf:predicate ; owl:hasValue :shoppedAt ] ]
+    ) .
 
 :buyer rdfs:domain :Purchase ;
   owl:propertyChainAxiom (:boughtStmt rdf:subject) ;
