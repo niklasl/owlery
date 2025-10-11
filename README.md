@@ -49,29 +49,29 @@ A simple Python script (using [pyoxigraph](https://pyoxigraph.readthedocs.io/)) 
 
 To see resulting entailments, pass it some RDF data:
 
-    $ uv run test/run.py test/data/rolification.ttl
+    $ uv run scripts/run.py test/data/rolification.ttl
 
 It can optionally apply a query for verifying the results instead:
 
-    $ uv run test/run.py test/data/rolification.ttl test/data/verify-rolification.rq
+    $ uv run scripts/run.py test/data/rolification.ttl test/data/verify-rolification.rq
 
 The script also applies the above mentioned `generalize.ru` update query; thus working with more complex requirements, such as entailed blank properties:
 
-    $ uv run test/run.py test/data/metarolification.ttl test/data/verify-rolification.rq
+    $ uv run scripts/run.py test/data/metarolification.ttl test/data/verify-rolification.rq
 
 Additionally passed update query files will also be applied.
 
 Handling entailment rules based on triple terms:
 
-    $ uv run test/run.py classicize.ru test/data/purchase.ttl test/data/verify-purchase.rq
+    $ uv run scripts/run.py classicize.ru test/data/purchase.ttl test/data/verify-purchase.rq
 
 To test the time expansion (see above):
 
-    $ uv run test/run.py time.ru test/data/time.ttl test/data/verify-time.rq
+    $ uv run scripts/run.py time.ru test/data/time.ttl test/data/verify-time.rq
 
 Full test of all examples:
 
-    $ uv run test/run.py classicize.ru time.ru test/data/*.ttl test/data/verify-*.rq
+    $ uv run scripts/run.py classicize.ru time.ru test/data/*.ttl test/data/verify-*.rq
 
 ## Applying Manually
 
