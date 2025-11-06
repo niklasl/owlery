@@ -35,9 +35,9 @@ You need an RDF graph implementation with SPARQL support. Then:
 
 An update query, `generalize.ru`, is also defined for "generalizing" RDF. This makes non-serializable entailments possible to work with, such as blank node predicates or literal subjects. It inserts `owl:sameAs` relations, mapping IRIs to blank nodes, and blank nodes to literals. For triple terms, see the following section.
 
-### RDF 1.2 Triple Terms
+### RDF 1.2 Basic Triple Term Form
 
-Another update query, `classicize.ru`, maps triple terms via `rdf:reifies` to blank node `rdf:Statement` "companion tokens".
+Another update query, `proposition-basicform.ru`, maps triple terms to basic-encoded blank node `rdf:TripleForm` structures.
 
 ### Time Value Expansion
 
@@ -63,7 +63,7 @@ Additionally passed update query files will also be applied.
 
 Handling entailment rules based on triple terms:
 
-    $ uv run scripts/run.py classicize.ru test/data/purchase.ttl test/data/verify-purchase.rq
+    $ uv run scripts/run.py proposition-basicform.ru test/data/purchase.ttl test/data/verify-purchase.rq
 
 To test the time expansion (see above):
 
@@ -71,7 +71,7 @@ To test the time expansion (see above):
 
 Full test of all examples:
 
-    $ uv run scripts/run.py classicize.ru time.ru test/data/*.ttl test/data/verify-*.rq
+    $ uv run scripts/run.py proposition-basicform.ru time.ru test/data/*.ttl test/data/verify-*.rq
 
 ## Applying Manually
 

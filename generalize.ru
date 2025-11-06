@@ -9,36 +9,22 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 insert {
   ?b owl:sameAs ?bskolem
 } where {
-  {
-    select ?b ?bprops (group_concat(?brel; separator="|") as ?brels) {
-      optional {
-        ?x ?xp ?b .
-        bind(concat(coalesce(str(?x), '?'), ' ', str(?xp)) as ?brel)
-      }
-
-      {
-        select ?b (group_concat(?bprop; separator="|") as ?bprops) {
-          ?b ?bp ?y .
-
-          filter(
-            isBlank(?b)
-            # Don't skolemize list nodes:
-            && not exists { ?b rdf:first [] }
-          )
-
-          bind(concat(str(?bp), ' ', coalesce(str(?y), '?')) as ?bprop)
-        } group by ?b
-      }
-    } group by ?b ?bprops
-  }
-
-  bind(concat(coalesce(?brels, ''), '::', ?bprops) as ?bshape)
-  bind(IRI(concat('http://example.org/.well-known/genid/', SHA256(?bshape))) as ?bskolem)
+  { select distinct ?b {
+    { ?x ?xp ?b } union { ?b ?bp ?y }
+  } }
+  filter(
+    isBlank(?b)
+    && not exists { ?b owl:sameAs ?alias . filter isIRI(?alias) }
+    #&& not exists { ?b owl:onProperty [] }
+  )
+  bind(IRI(concat('http://example.org/.well-known/genid/', STRUUID())) as ?bskolem)
 };
+
 
 ##
 # Add IRI stand-ins for literal values.
 insert {
+  ?s ?p ?shaurn .
   ?shaurn a rdfs:Literal, ?dt ;
     owl:sameAs ?o .
 } where {
@@ -46,5 +32,6 @@ insert {
   filter(isLiteral(?o))
   bind(datatype(?o) as ?dt)
   bind(concat(str(?o), '^^', str(?dt), '@', lang(?o)) as ?ltrepr)  # TODO: , '--', langdir(?o)
-  bind(IRI(concat('urn:sha:', SHA256(?ltrepr))) as ?shaurn)
+  #bind(IRI(concat('urn:tdb:2025:urn:sha:', SHA256(?ltrepr))) as ?shaurn)
+  bind(IRI(concat('http://example.org/.well-known/genid/', SHA256(?ltrepr))) as ?shaurn)
 }

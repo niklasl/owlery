@@ -11,32 +11,30 @@ base <https://example.org/>
 :selfOfType rdfs:subPropertyOf [ owl:inverseOf owl:onProperty ] ;
   rdfs:range [ owl:onProperty owl:hasSelf ; owl:hasValue true ] .
 
-:reifiedBy owl:inverseOf rdf:reifies .
-
 ##
 # TBox
 
-:boughtStmt owl:propertyChainAxiom (
+:boughtPpn owl:propertyChainAxiom (
       [ :selfOfType :Purchase ]
-      rdf:reifies :reifiedBy
-      [ :selfOfType [ owl:onProperty rdf:predicate ; owl:hasValue :bought ] ]
+      rdf:reifies
+      [ :selfOfType [ owl:onProperty rdf:triplePredicate ; owl:hasValue :bought ] ]
     ) .
 
-:shoppedAtStmt owl:propertyChainAxiom (
+:shoppedAtPpn owl:propertyChainAxiom (
       [ :selfOfType :Purchase ]
-      rdf:reifies :reifiedBy
-      [ :selfOfType [ owl:onProperty rdf:predicate ; owl:hasValue :shoppedAt ] ]
+      rdf:reifies
+      [ :selfOfType [ owl:onProperty rdf:triplePredicate ; owl:hasValue :shoppedAt ] ]
     ) .
 
 :buyer rdfs:domain :Purchase ;
-  owl:propertyChainAxiom (:boughtStmt rdf:subject) ;
-  owl:propertyChainAxiom (:shoppedAtStmt rdf:subject) .
+  owl:propertyChainAxiom (:boughtPpn rdf:tripleSubject) ;
+  owl:propertyChainAxiom (:shoppedAtPpn rdf:tripleSubject) .
 
 :item rdfs:domain :Purchase ;
-  owl:propertyChainAxiom (:boughtStmt rdf:object) .
+  owl:propertyChainAxiom (:boughtPpn rdf:tripleObject) .
 
 :seller rdfs:domain :Purchase ;
-  owl:propertyChainAxiom (:shoppedAtStmt rdf:object) .
+  owl:propertyChainAxiom (:shoppedAtPpn rdf:tripleObject) .
 
 :bought owl:propertyChainAxiom ( [ owl:inverseOf :buyer ] :item ) .
 
@@ -45,13 +43,11 @@ base <https://example.org/>
 ##
 # ABox
 
-<Alice> :bought <SomeComputer> . # TODO: ~ <purchase1> .
-<Alice> :shoppedAt <ComputerStore> . # TODO: ~ <purchase1> .
+<Alice> :bought <SomeComputer> ~ <purchase1> .
+<Alice> :shoppedAt <ComputerStore> ~ <purchase1> .
 <purchase1> a :Purchase ;
   :date "2014-12-15"^^xsd:date ;
   :cost 2500 ;
-  :currency :USD ;
-  # FIXME: This is the *old* RDF-star form. In RDF 1.2, these are <<( ... )>>
-  # (and here preferably expressed via annotation per above).
-  rdf:reifies << <Alice> :bought <SomeComputer> >> ;
-  rdf:reifies << <Alice> :shoppedAt <ComputerStore> >> .
+  :currency :USD .
+  #rdf:reifies <<( <Alice> :bought <SomeComputer> )>> ;
+  #rdf:reifies <<( <Alice> :shoppedAt <ComputerStore> )>> .

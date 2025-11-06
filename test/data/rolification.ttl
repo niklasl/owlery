@@ -6,14 +6,14 @@ base <https://example.org/>
 ##
 # TBox
 
-:GenreForm owl:equivalentClass [ owl:onProperty :selfIsGf ; owl:hasSelf true ] .
-:genreForm owl:propertyChainAxiom (:category :selfIsGf) .
+:genreForm owl:propertyChainAxiom (:category _:a_GenreForm) .
+[ owl:onProperty _:a_GenreForm ; owl:hasSelf true ] owl:equivalentClass :GenreForm .
 
-:ContentType owl:equivalentClass [ owl:onProperty :selfIsCt ; owl:hasSelf true ] .
-:contentType owl:propertyChainAxiom (:category :selfIsCt) .
+:contentType owl:propertyChainAxiom (:category _:a_ContentType) .
+:ContentType owl:equivalentClass [ owl:onProperty _:a_ContentType ; owl:hasSelf true ] .
 
-:CarrierType owl:equivalentClass [ owl:onProperty :selfIsCr ; owl:hasSelf true ] .
-:carrierType owl:propertyChainAxiom (:category :selfIsCr) .
+:carrierType owl:propertyChainAxiom (:category _:a_CarrierType) .
+:CarrierType owl:equivalentClass [ owl:onProperty _:a_CarrierType ; owl:hasSelf true ] .
 
 :LiteraryGenre rdfs:subClassOf :GenreForm .
 :PhysicalForm rdfs:subClassOf :GenreForm .
