@@ -35,9 +35,9 @@ You need an RDF graph implementation with SPARQL support. Then:
 
 An update query, `generalize.ru`, is also defined for "generalizing" RDF. This makes non-serializable entailments possible to work with, such as blank node predicates or literal subjects. It inserts `owl:sameAs` relations, mapping IRIs to blank nodes, and blank nodes to literals. For triple terms, see the following section.
 
-### RDF 1.2 Basic Triple Term Form
+### RDF 1.2 Basic Proposition Form
 
-Another update query, `proposition-basicform.ru`, maps triple terms to basic-encoded blank node `rdf:TripleForm` structures.
+Another update query, `proposition-basicform.ru`, maps triple terms to basic-encoded blank node `rdf:PropositionForm` structures.
 
 ### Time Value Expansion
 

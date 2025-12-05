@@ -6,39 +6,57 @@ prefix : <http://example.org/ns/>
 base <https://example.org/>
 
 ##
-# MetaBox
-
-:selfOfType rdfs:subPropertyOf [ owl:inverseOf owl:onProperty ] ;
-  rdfs:range [ owl:onProperty owl:hasSelf ; owl:hasValue true ] .
-
-##
 # TBox
 
-:boughtPpn owl:propertyChainAxiom (
-      [ :selfOfType :Purchase ]
+[ owl:onProperty _:a_Proposition_of_bought ; owl:hasSelf true ]
+  owl:equivalentClass [ owl:onProperty rdf:propositionFormPredicate ;
+      owl:hasValue :bought ] .
+
+[ owl:onProperty _:a_Proposition_of_shoppedAt ; owl:hasSelf true ]
+  owl:equivalentClass [ owl:onProperty rdf:propositionFormPredicate ;
+      owl:hasValue :shoppedAt ] .
+
+[ owl:onProperty _:a_Purchase ; owl:hasSelf true ]
+  owl:equivalentClass :Purchase .
+
+_:is_Purchase_of_reified_bought_Proposition owl:propertyChainAxiom (
+      _:a_Purchase
       rdf:reifies
-      [ :selfOfType [ owl:onProperty rdf:triplePredicate ; owl:hasValue :bought ] ]
+      _:a_Proposition_of_bought
     ) .
 
-:shoppedAtPpn owl:propertyChainAxiom (
-      [ :selfOfType :Purchase ]
+_:is_Purchase_of_reified_shoppedAt_Proposition owl:propertyChainAxiom (
+      _:a_Purchase
       rdf:reifies
-      [ :selfOfType [ owl:onProperty rdf:triplePredicate ; owl:hasValue :shoppedAt ] ]
+      _:a_Proposition_of_shoppedAt
     ) .
 
 :buyer rdfs:domain :Purchase ;
-  owl:propertyChainAxiom (:boughtPpn rdf:tripleSubject) ;
-  owl:propertyChainAxiom (:shoppedAtPpn rdf:tripleSubject) .
+  owl:inverseOf _:buyerOf_Purchase ;
+  owl:propertyChainAxiom (
+      _:is_Purchase_of_reified_bought_Proposition
+      rdf:propositionFormSubject
+    ) ;
+  owl:propertyChainAxiom (
+      _:is_Purchase_of_reified_shoppedAt_Proposition
+      rdf:propositionFormSubject
+    ) .
 
 :item rdfs:domain :Purchase ;
-  owl:propertyChainAxiom (:boughtPpn rdf:tripleObject) .
+  owl:propertyChainAxiom (
+      _:is_Purchase_of_reified_bought_Proposition
+      rdf:propositionFormObject
+    ) .
 
 :seller rdfs:domain :Purchase ;
-  owl:propertyChainAxiom (:shoppedAtPpn rdf:tripleObject) .
+  owl:propertyChainAxiom (
+      _:is_Purchase_of_reified_shoppedAt_Proposition
+      rdf:propositionFormObject
+    ) .
 
-:bought owl:propertyChainAxiom ( [ owl:inverseOf :buyer ] :item ) .
+:bought owl:propertyChainAxiom ( _:buyerOf_Purchase :item ) .
 
-:shoppedAt owl:propertyChainAxiom ( [ owl:inverseOf :buyer ] :seller ) .
+:shoppedAt owl:propertyChainAxiom ( _:buyerOf_Purchase :seller ) .
 
 ##
 # ABox
@@ -49,5 +67,3 @@ base <https://example.org/>
   :date "2014-12-15"^^xsd:date ;
   :cost 2500 ;
   :currency :USD .
-  #rdf:reifies <<( <Alice> :bought <SomeComputer> )>> ;
-  #rdf:reifies <<( <Alice> :shoppedAt <ComputerStore> )>> .
