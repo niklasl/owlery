@@ -5,7 +5,7 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
 ##
-# "Skolemize" bnodes; in case they are entailed to be properties.
+# "Skolemize" bnodes used in property axiom, so they can be used as predicates.
 insert {
   ?b owl:sameAs ?bskolem
 } where {
@@ -14,8 +14,10 @@ insert {
   } }
   filter(
     isBlank(?b)
+    # unless already skolemized:
     && not exists { ?b owl:sameAs ?alias . filter isIRI(?alias) }
-    #&& not exists { ?b owl:onProperty [] }
+    # and is used in some property axiom:
+    && exists { [] rdfs:subPropertyOf|^rdfs:subPropertyOf|owl:equivalentProperty|owl:onProperty ?b }
   )
   bind(IRI(concat('http://example.org/.well-known/genid/', STRUUID())) as ?bskolem)
 };
