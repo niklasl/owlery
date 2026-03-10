@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# dependencies = ["pyoxigraph >= 0.5.0, < 2.0"]
+# dependencies = ["pyoxigraph >= 0.5.5, < 2.0"]
 # ///
 import argparse
 import sys
@@ -59,11 +59,11 @@ for fpath in args.sources:
     store.bulk_extend(data)
     prefixes.update(reader.prefixes)
 
+if args.verbose:
+    print(f"Initial size: {len(store)}", file=sys.stderr)
+
 for i in range(args.max_iters):
     c = len(store)
-
-    if args.verbose:
-        print(f"Iteration {i}; size: {c}", file=sys.stderr)
 
     store.update(owlery)
 
@@ -73,6 +73,9 @@ for i in range(args.max_iters):
     # First update may introduce new bnodes:
     if i == 0:
         store.update(genery)
+
+    if args.verbose:
+        print(f"Iteration {i + 1}; size: {len(store)}", file=sys.stderr)
 
     if len(store) == c:
         break
