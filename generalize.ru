@@ -21,7 +21,8 @@ insert {
       [] rdfs:subPropertyOf|^rdfs:subPropertyOf
          |owl:equivalentProperty
          |owl:onProperty
-         |owl:inverseOf|^owl:inverseOf ?b
+         |owl:inverseOf|^owl:inverseOf
+         |^owl:propertyChainAxiom ?b
     }
   )
   bind(IRI(concat('http://example.org/.well-known/genid/', STRUUID())) as ?bskolem)
