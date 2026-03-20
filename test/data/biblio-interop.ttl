@@ -1,0 +1,58 @@
+##
+# Example A-Box
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix bibmap: <http://example.org/ns/bibmap/>
+base <http://example.org/>
+
+<scholarly_resource>
+  dct:creator <some_person> ~ <scholarly_resource#ctrb1> ;
+  dct:creator <other_person> .
+
+<some_person> a foaf:Person ;
+    foaf:name "Some Person" ;
+    dct:identifier "a93ca903-a1d3-4943-ae8b-aa9c93e0b17c" ;
+    bibmap:hasRole <https://credit.niso.org/contributor-roles/data-curation> ~ <scholarly_resource#ctrb1> ;
+    bibmap:hasAffiliation <linked_org> ~ <scholarly_resource#ctrb1> .
+
+<scholarly_resource#ctrb1> a bibmap:Contribution .
+
+
+##
+# Supporting T-Box
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix bf: <http://id.loc.gov/ontologies/bibframe/>
+
+bibmap:Contribution
+    rdfs:subClassOf bf:Contribution ;
+    owl:equivalentClass [ owl:onProperty _:a_Contribution ; owl:hasSelf true ] .
+
+bibmap:hasContribution
+    rdfs:subPropertyOf bf:contribution ;
+    owl:propertyChainAxiom ( [owl:inverseOf rdf:propositionFormSubject] _:a_creator_ppn [owl:inverseOf rdf:reifies] _:a_Contribution ) .
+
+[ owl:onProperty _:a_creator_ppn ; owl:hasSelf true ]
+    owl:equivalentClass
+        [ owl:onProperty rdf:propositionFormPredicate ; owl:hasValue dct:creator ] .
+
+bibmap:agent
+    rdfs:subPropertyOf bf:agent ;
+    owl:propertyChainAxiom ( _:a_Contribution rdf:reifies _:a_creator_ppn rdf:propositionFormObject ) .
+
+bibmap:hasAffiliation
+    owl:propertyChainAxiom ( _:a_Contribution rdf:reifies _:a_affiliation_ppn rdf:propositionFormObject ) .
+
+[ owl:onProperty _:a_affiliation_ppn ; owl:hasSelf true ]
+    owl:equivalentClass
+        [ owl:onProperty rdf:propositionFormPredicate ; owl:hasValue bibmap:hasAffiliation ] .
+
+bf:role owl:propertyChainAxiom ( _:a_Contribution bibmap:hasRole ) .
+bibmap:hasRole
+    owl:propertyChainAxiom ( _:a_Contribution rdf:reifies _:a_role_ppn rdf:propositionFormObject ) .
+
+[ owl:onProperty _:a_role_ppn ; owl:hasSelf true ]
+    owl:equivalentClass
+        [ owl:onProperty rdf:propositionFormPredicate ; owl:hasValue bibmap:hasRole ] .
