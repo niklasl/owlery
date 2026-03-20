@@ -17,7 +17,12 @@ insert {
     # unless already skolemized:
     && not exists { ?b owl:sameAs ?alias . filter isIRI(?alias) }
     # and is used in some property axiom:
-    && exists { [] rdfs:subPropertyOf|^rdfs:subPropertyOf|owl:equivalentProperty|owl:onProperty ?b }
+    && exists {
+      [] rdfs:subPropertyOf|^rdfs:subPropertyOf
+         |owl:equivalentProperty
+         |owl:onProperty
+         |owl:inverseOf|^owl:inverseOf ?b
+    }
   )
   bind(IRI(concat('http://example.org/.well-known/genid/', STRUUID())) as ?bskolem)
 };
