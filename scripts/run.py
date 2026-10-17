@@ -17,6 +17,7 @@ argp = argparse.ArgumentParser()
 argp.add_argument('-B', '--basic', action='store_true', default=False)
 argp.add_argument('-L', '--compound-literal', action='store_true', default=False)
 argp.add_argument('-C', '--cleanup', action='store_true', default=False)
+argp.add_argument('-T', '--drop-blank-types', action='store_true', default=False)
 argp.add_argument('-M', '--max-iters', type=int, default=MAX_ITERS)
 argp.add_argument('-V', '--verbose', action='store_true', default=False)
 argp.add_argument('sources', metavar='SOURCE', nargs='*')
@@ -26,18 +27,26 @@ owlery = (REPO_ROOT / 'owl.ru').read_text()
 genery = (REPO_ROOT / 'generalize.ru').read_text()
 
 extra_updates = []
+cleanups = []
 
 prefixes = {}
 
 store = Store()
 
+if args.cleanup:
+    cleanupery = (REPO_ROOT / 'cleanup.ru').read_text()
+    cleanups.append(cleanupery)
+
 if args.basic:
     extra_updates.append((REPO_ROOT / 'proposition-basicform.ru').read_text())
+    if args.cleanup:
+        cleanups.append((REPO_ROOT / 'cleanup-proposition-basicform.ru').read_text())
 
 if args.compound_literal:
     extra_updates.append((REPO_ROOT / 'langdir-compoundliteral.ru').read_text())
 
-cleanupery = (REPO_ROOT / 'cleanup.ru').read_text() if args.cleanup else None
+if args.drop_blank_types:
+    cleanups.append((REPO_ROOT / 'cleanup-blank-types.ru').read_text())
 
 pwd_iri = Path('').absolute().as_uri() + '/'
 
@@ -83,8 +92,8 @@ for i in range(args.max_iters):
     if len(store) == c:
         break
 
-if cleanupery:
-    store.update(cleanupery)
+for cleanup in cleanups:
+    store.update(cleanup)
 
 if extra_queries:
     for query in extra_queries:
