@@ -5,7 +5,7 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
 ##
-# "Skolemize" bnodes used in property axiom, so they can be used as predicates.
+# "Skolemize" bnodes used in property axioms, so they can be used as predicates.
 insert {
   ?b owl:sameAs ?bskolem
 } where {
@@ -32,14 +32,21 @@ insert {
 ##
 # Add IRI stand-ins for literal values.
 insert {
-  ?s ?p ?shaurn .
-  ?shaurn a rdfs:Literal, ?dt ;
+  ?s ?p ?litnode .
+  ?litnode a rdfs:Literal, ?dt ;
     owl:sameAs ?o .
 } where {
   ?s ?p ?o .
   filter(isLiteral(?o))
-  bind(datatype(?o) as ?dt)
-  bind(concat(str(?o), '^^', str(?dt), '@', lang(?o)) as ?ltrepr)  # TODO: , '--', langdir(?o)
-  #bind(IRI(concat('urn:tdb:2025:urn:sha:', SHA256(?ltrepr))) as ?shaurn)
-  bind(IRI(concat('http://example.org/.well-known/genid/', SHA256(?ltrepr))) as ?shaurn)
+  optional {
+    ?existing_litnode owl:sameAs ?o .
+    filter(isIRI(?existing_litnode) &&
+           contains(str(?existing_litnode), "/.well-known/genid/"))
+  }
+  BIND(COALESCE(?existing_litnode,
+                IRI(concat('http://example.org/.well-known/genid/',
+                           SHA256(concat(str(?o), '^^', str(datatype(?o)),
+                                         '@', lang(?o),
+                                         '--', langdir(?o))))))
+       as ?litnode)
 }
