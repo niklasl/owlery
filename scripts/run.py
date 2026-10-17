@@ -15,6 +15,7 @@ MAX_ITERS = 24
 
 argp = argparse.ArgumentParser()
 argp.add_argument('-B', '--basic', action='store_true', default=False)
+argp.add_argument('-L', '--compound-literal', action='store_true', default=False)
 argp.add_argument('-C', '--cleanup', action='store_true', default=False)
 argp.add_argument('-M', '--max-iters', type=int, default=MAX_ITERS)
 argp.add_argument('-V', '--verbose', action='store_true', default=False)
@@ -32,6 +33,9 @@ store = Store()
 
 if args.basic:
     extra_updates.append((REPO_ROOT / 'proposition-basicform.ru').read_text())
+
+if args.compound_literal:
+    extra_updates.append((REPO_ROOT / 'langdir-compoundliteral.ru').read_text())
 
 cleanupery = (REPO_ROOT / 'cleanup.ru').read_text() if args.cleanup else None
 
@@ -69,10 +73,9 @@ for i in range(args.max_iters):
 
     for update in extra_updates:
         store.update(update)
-
-    # First update may introduce new bnodes:
-    if i == 0:
-        store.update(genery)
+        # Term interpretation may introduce new nodes:
+        if len(store) > c:
+            store.update(genery)
 
     if args.verbose:
         print(f"Iteration {i + 1}; size: {len(store)}", file=sys.stderr)
