@@ -1,0 +1,15 @@
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+ask {
+  <https://linked.art/example/object/nightwatch/1> a crm:E22_Human-Made_Object ;
+    crm:P1_is_identified_by [ a crm:E33_E41_Linguistic_Appellation ;
+        crm:P190_has_symbolic_content "The Night Watch" ;
+        crm:P2_has_type <http://vocab.getty.edu/aat/300404670> ;
+        crm:P72_has_language <http://vocab.getty.edu/aat/300388277> ] ,
+      [ a crm:E33_E41_Linguistic_Appellation ;
+        crm:P190_has_symbolic_content "De Nachtwacht" ;
+        crm:P2_has_type <http://vocab.getty.edu/aat/300404670> ;
+        crm:P72_has_language <http://vocab.getty.edu/aat/300388256> ] ;
+    rdfs:label "Night Watch by Rembrandt" .
+}

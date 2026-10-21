@@ -31,13 +31,19 @@ You need an RDF graph implementation with SPARQL support. Then:
 
 ## Extensions
 
+The following extensions implement interpretations defined in [RDF 1.2 Intrinsic Properties of Structured Resources](https://w3c.github.io/rdf-struct-patterns/spec/).
+
 ### Generalized RDF
 
 An update query, `generalize.ru`, is also defined for "generalizing" RDF. This makes non-serializable entailments possible to work with, such as blank node predicates or literal subjects. It inserts `owl:sameAs` relations, mapping IRIs to blank nodes, and blank nodes to literals. For triple terms, see the following section.
 
+### RDF 1.2 Compound Literals
+
+The update query `langdir-compoundliteral.ru` maps `rdf:langString` and `rdf:dirLangString` literals to `rdf:CompoundLiteral` structures.
+
 ### RDF 1.2 Basic Proposition Form
 
-Another update query, `proposition-basicform.ru`, maps triple terms to basic-encoded blank node `rdf:PropositionForm` structures.
+The update query `proposition-basicform.ru` maps triple terms to basic-encoded blank node `rdf:PropositionForm` structures.
 
 ### Time Value Expansion
 
@@ -65,13 +71,17 @@ Handling entailment rules based on triple terms:
 
     $ uv run scripts/run.py proposition-basicform.ru test/data/purchase.ttl test/data/verify-purchase.rq
 
+and entailment rules based on compound literals:
+
+    $ uv run scripts/run.py -B -L test/data/dc-annot-linkedarts.ttl test/data/verify-dc-annot-linkedarts.rq
+
 To test the time expansion (see above):
 
     $ uv run scripts/run.py time.ru test/data/time.ttl test/data/verify-time.rq
 
 Full test of all examples:
 
-    $ uv run scripts/run.py proposition-basicform.ru time.ru test/data/*.ttl test/data/verify-*.rq
+    $ uv run scripts/run.py proposition-basicform.ru langdir-compoundliteral.ru time.ru test/data/*.ttl test/data/verify-*.rq
 
 ## Applying Manually
 

@@ -1,0 +1,76 @@
+# Based on: <https://linked.art/example/object/nightwatch/1>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+<http://vocab.getty.edu/aat/300388256> a crm:E56_Language ;
+  rdfs:label "Dutch" ;
+  skos:notation "nl" .
+
+<http://vocab.getty.edu/aat/300388277> a crm:E56_Language ;
+  rdfs:label "English" ;
+  skos:notation "en" .
+
+<http://vocab.getty.edu/aat/300404670> a crm:E55_Type ;
+  rdfs:label "Primary Name" .
+
+<https://linked.art/example/object/nightwatch/1> a crm:E22_Human-Made_Object ;
+  dct:title "De Nachtwacht"@nl {| a crm:E33_E41_Linguistic_Appellation |} ,
+    "The Night Watch"@en {| a crm:E33_E41_Linguistic_Appellation |} ;
+  rdfs:label "Night Watch by Rembrandt"@en .
+
+##
+# Mapping T-box
+
+[] rdfs:subPropertyOf crm:P1_is_identified_by ;
+  rdfs:range _:PrimaryName ;
+  owl:propertyChainAxiom (
+    [owl:inverseOf rdf:propositionFormSubject]
+    _:a_title_Proposition
+    [owl:inverseOf rdf:reifies]
+  ) .
+
+crm:P190_has_symbolic_content
+  owl:propertyChainAxiom (
+      _:a_LinguisticAppellation
+      rdf:reifies
+      _:a_title_Proposition
+      rdf:propositionFormObject
+      rdf:value
+    ) .
+
+crm:P72_has_language
+  owl:propertyChainAxiom (
+      _:a_LinguisticAppellation
+      rdf:reifies
+      _:a_title_Proposition
+      rdf:propositionFormObject
+      rdf:language
+      [owl:inverseOf skos:notation]
+      _:a_Language
+    ) .
+
+[ owl:onProperty _:a_title_Proposition ; owl:hasSelf true ]
+  owl:equivalentClass
+    [ owl:onProperty rdf:propositionFormPredicate ;
+      owl:hasValue dct:title ] .
+
+[ owl:onProperty _:a_LinguisticAppellation ; owl:hasSelf true ]
+  owl:equivalentClass
+    [ owl:onProperty rdf:type ;
+      owl:hasValue crm:E33_E41_Linguistic_Appellation ] .
+
+[ owl:onProperty _:a_Language ; owl:hasSelf true ]
+  owl:equivalentClass
+    [ owl:onProperty rdf:type ;
+      owl:hasValue crm:E56_Language ] .
+
+_:PrimaryName
+  owl:onProperty crm:P2_has_type ;
+  owl:hasValue <http://vocab.getty.edu/aat/300404670> .
+
+rdfs:label
+  owl:propertyChainAxiom (rdfs:label rdf:value) .
