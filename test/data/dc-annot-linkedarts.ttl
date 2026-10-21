@@ -31,6 +31,7 @@ prefix skos: <http://www.w3.org/2004/02/skos/core#>
     [owl:inverseOf rdf:propositionFormSubject]
     _:a_title_Proposition
     [owl:inverseOf rdf:reifies]
+    _:a_LinguisticAppellation
   ) .
 
 crm:P190_has_symbolic_content

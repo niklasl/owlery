@@ -73,7 +73,7 @@ Handling entailment rules based on triple terms:
 
 and entailment rules based on compound literals:
 
-    $ uv run scripts/run.py -B -L test/data/dc-annot-linkedarts.ttl test/data/verify-dc-annot-linkedarts.rq
+    $ uv run scripts/run.py proposition-basicform.ru langdir-compoundliteral.ru test/data/dc-annot-linkedarts.ttl test/data/verify-dc-annot-linkedarts.rq
 
 To test the time expansion (see above):
 
