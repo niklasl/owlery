@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script
 # /// script
-# dependencies = ["pyoxigraph >= 0.5.5, < 2.0"]
+# dependencies = ["pyoxigraph >= 0.5.13, < 2.0"]
 # ///
 import argparse
 import sys
@@ -20,6 +20,7 @@ argp.add_argument('-C', '--cleanup', action='store_true', default=False)
 argp.add_argument('-T', '--drop-blank-types', action='store_true', default=False)
 argp.add_argument('-M', '--max-iters', type=int, default=MAX_ITERS)
 argp.add_argument('-V', '--verbose', action='store_true', default=False)
+argp.add_argument('--c14n', help='Canonicalize bnodes in results', action='store_true')
 argp.add_argument('sources', metavar='SOURCE', nargs='*')
 args = argp.parse_args()
 
@@ -93,6 +94,13 @@ for i in range(args.max_iters):
 
 for cleanup in cleanups:
     store.update(cleanup)
+
+if args.c14n:
+    from pyoxigraph import Dataset, CanonicalizationAlgorithm
+    dataset = Dataset(store)
+    dataset.canonicalize(CanonicalizationAlgorithm.RDFC_1_0)
+    store = Store()
+    store.extend(dataset)
 
 if extra_queries:
     for query in extra_queries:
