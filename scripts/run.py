@@ -51,6 +51,8 @@ if args.drop_blank_types:
 
 pwd_iri = Path('').absolute().as_uri() + '/'
 
+base_iri = pwd_iri
+
 extra_queries = []
 
 for fpath in args.sources:
@@ -72,6 +74,8 @@ for fpath in args.sources:
 
     store.bulk_extend(data)
     prefixes.update(reader.prefixes)
+    if reader.base_iri:
+        base_iri = reader.base_iri
 
 if args.verbose:
     print(f"Initial size: {len(store)}", file=sys.stderr)
@@ -110,7 +114,7 @@ else:
     try:
         from gnarly.trig import TrigSerializer, get_options  # type: ignore[import-not-found]
         TrigSerializer(
-            sys.stdout, prefixes, pwd_iri, options=None
+            sys.stdout, prefixes, base_iri, options=None
         ).serialize(store)
     except ImportError:
-       store.dump(sys.stdout.buffer, RdfFormat.TRIG, prefixes=prefixes, base_iri=pwd_iri)
+        store.dump(sys.stdout.buffer, RdfFormat.TRIG, prefixes=prefixes, base_iri=base_iri)
