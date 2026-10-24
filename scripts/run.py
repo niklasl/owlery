@@ -79,12 +79,11 @@ for i in range(args.max_iters):
     c = len(store)
 
     store.update(owlery)
+    # Term interpretation may introduce new nodes:
+    store.update(genery)
 
     for update in extra_updates:
         store.update(update)
-        # Term interpretation may introduce new nodes:
-        if len(store) > c:
-            store.update(genery)
 
     if args.verbose:
         print(f"Iteration {i + 1}; size: {len(store)}", file=sys.stderr)
