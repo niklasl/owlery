@@ -107,4 +107,10 @@ if extra_queries:
         results = store.query(query, base_iri=pwd_iri, use_default_graph_as_union=True)
         print(results.serialize(format=QueryResultsFormat.TSV).decode())  # type: ignore
 else:
-    store.dump(sys.stdout.buffer, RdfFormat.TRIG, prefixes=prefixes, base_iri=pwd_iri)
+    try:
+        from gnarly.trig import TrigSerializer, get_options  # type: ignore[import-not-found]
+        TrigSerializer(
+            sys.stdout, prefixes, pwd_iri, options=None
+        ).serialize(store)
+    except ImportError:
+       store.dump(sys.stdout.buffer, RdfFormat.TRIG, prefixes=prefixes, base_iri=pwd_iri)
